@@ -19,7 +19,6 @@ int main(int argc,char **argv)
     Msg.head=NULL;
     Msg.tail=NULL;
     Msg.num=0;
-    struct sockaddr_in serv_addr;
     int ret;
     int serv_port;
     char recv_buf[1024];

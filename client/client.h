@@ -120,12 +120,14 @@ Gmsghead Gsg;
 int exit_flag;//用户注销标识
 char user_id[10];//用户id
 int connfd;//socket
+int filefd;//file socket
 int chat_flag;//聊天标志1好友2群
 int findpsw_flag;//找回密码标志
 int file_flag;
 char chat_id[10];//聊天对象
 int read_len;
 int realfile_read_len;
+struct sockaddr_in serv_addr;//服务器地址
 
 //读写锁
 pthread_mutex_t p_mutex,s_mutex,mutex,gm_mutex;
@@ -138,6 +140,7 @@ int my_read(int conn_fd,void *buf,int len);
 void my_err(const char *str,int line);
 
 void *msgbox(void *arg);
+void *filemsgbox(void *arg);
 int get_arg(char *read_buf,char *recv_buf,int len);
 
 int addfmsg(char *send_id,char *recv_id,char *msg);
@@ -182,6 +185,7 @@ int print_file();
 int send_file();
 int recv_file();
 void *realfile(void *arg);
+void *recvfile(void *arg);
 int realfile_get_arg(char *read_buf,char *recv_buf,int len);
 
 #endif

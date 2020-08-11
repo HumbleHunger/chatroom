@@ -136,7 +136,7 @@ int main()
                 if((connfd=accept(listenfd,(struct sockaddr*)&client_addr,&client_addr_len))<0){
                     my_err("accept",__LINE__);
                 }
-                //fprintf(log,"client %s connect\n",inet_ntoa(client_addr.sin_addr));
+                fprintf(stderr,"client %s connect\n",inet_ntoa(client_addr.sin_addr));
                 //设置为非阻塞
                 setnoblock(connfd);
                 

@@ -26,29 +26,18 @@ void *realfile(void *arg)
     fd[len]=0;
     printf("fd is %s\n",fd);
     epoll_ctl(epfd,EPOLL_CTL_DEL,atoi(fd),NULL);
-    /*//获取文件数据
-    char buffer[1024];
-    memset(buffer,0,sizeof(buffer));
-    sprintf(buffer,"%s",(char *)arg+len+1);
-    if((lenth=get_arg(arg,buffer,1024))<0){
-        fprintf(stderr,"get_arg failed\n");
-    }
-    buffer[lenth]=0;*/
     //printf("filedata is %s\n",buffer);
     FILE *fp=fopen(filename,"w");
     int length = 0;
-    //设置为阻塞
-    //setblock(atoi(fd));
     char buffer[1024];
     memset(buffer,0,sizeof(buffer));
     char data[5];
     memset(data,0,sizeof(data));
     sprintf(data,"1\n");
-    //发送下EPOLL完成
+    //发送下就绪信息
     if(send_pack(atoi(fd),START,strlen(data),data)<0){
         my_err("write",__LINE__);
     }
-    //sleep(2);//用阻塞IO加END包代替
     int conn_fd=atoi(fd);
     while(1){
         //接收数据类型
@@ -82,18 +71,8 @@ void *realfile(void *arg)
         }
     }
     printf("recv over\n");
-    //setnoblock(atoi(fd));
-    struct epoll_event ev;
-    ev.events=EPOLLIN | EPOLLRDHUP | EPOLLET;
-    ev.data.fd=atoi(fd);
-    epoll_ctl(epfd,EPOLL_CTL_ADD,atoi(fd),&ev);
-    //发送上EPOLL完成
-    memset(data,0,sizeof(data));
-    sprintf(data,"1\n");
-    if(send_pack(atoi(fd),START,strlen(data),data)<0){
-        my_err("write",__LINE__);
-    }
     fclose(fp);
+    close(atoi(fd));
     free(arg);
     printf("realfile over\n");
 }

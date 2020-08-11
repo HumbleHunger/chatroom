@@ -637,6 +637,12 @@ void *msgbox(void *arg)
                 P_UNLOCK;
                 break;
             }
+            if(flag[0]=='1'){
+                file_flag=1;
+                C_SIGNAL;
+                break;
+            }
+            /*
             //printf("why??");
             char filename[256];
             memset(filename,0,sizeof(filename));
@@ -646,9 +652,9 @@ void *msgbox(void *arg)
             char buffer[256];
             memset(buffer,0,sizeof(buffer));
             sprintf(buffer,"%s",recv_buf+read_len);
-            /*if(get_arg(recv_buf,buffer,sizeof(buffer))<0){
+            if(get_arg(recv_buf,buffer,sizeof(buffer))<0){
                 my_err("read",__LINE__);
-            }*/
+            }
             //printf("buffer is %s",buffer);
             FILE *fp=fopen(filename,"a");
             if(fwrite(buffer,sizeof(char),atoi(len)-3-strlen(filename),fp)<atoi(len)-3-strlen(filename))
@@ -656,7 +662,7 @@ void *msgbox(void *arg)
                 printf("File:\t%s Write Failed\n", filename);
             }
             fclose(fp);
-            break;
+            break;*/
         }
         case START:{
             /*char flag[2];

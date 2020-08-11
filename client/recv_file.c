@@ -18,11 +18,9 @@ int recv_file()
     P_UNLOCK;
     char filename[256];
     scanf("%s",filename);
-    char send_buf[1024];
-    memset(send_buf,0,sizeof(send_buf));
-    sprintf(send_buf,"%s\n%s\n%s\n",user_id,fid,filename);
-    //printf("recv_file send_buf is %s",send_buf);//
-    if(send_pack(connfd,RECVFILE,strlen(send_buf),send_buf)<0){
-        my_err("write",__LINE__);
-    }
+    pthread_t tid;
+    char *arg=(char *)malloc(1024*sizeof(char));
+    memset(arg,0,sizeof(arg));
+    sprintf(arg,"%s\n%s\n",fid,filename);
+    pthread_create(&tid,NULL,recvfile,(void *)arg);
 }

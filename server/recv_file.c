@@ -49,22 +49,59 @@ void *recv_file(void *arg)
 	MYSQL_ROW row;
     result=mysql_store_result(&mysql);
     row=mysql_fetch_row(result);
-    char data[1024];
+    char data[5];
     if(row==NULL){
         memset(data,0,sizeof(data));
         sprintf(data,"0\n");
         if(send_pack(atoi(fd),RECVFILE,strlen(data),data)<0){
             my_err("write",__LINE__);
         }
+        close(atoi(fd));
         free(arg);
         return NULL;
     }
+    else{
+        memset(data,0,sizeof(data));
+        sprintf(data,"1\n");
+        if(send_pack(atoi(fd),RECVFILE,strlen(data),data)<0){
+            my_err("write",__LINE__);
+        }
+        printf("send 1 to %s\n",fd);
+    }
+    //下EPOLL
+    epoll_ctl(epfd,EPOLL_CTL_DEL,atoi(fd),NULL);
     FILE *fp=fopen(filename,"r");
-    char send_buf[1024];
-    // 每读取一段数据，便将其发送给服务器，循环直到文件读完为止
-    char buffer[100];
-    memset(buffer,0,sizeof(buffer));
-    while((len=fread(buffer,sizeof(char),96-strlen(filename),fp)) > 0)
+    //发送下EPOLL完成
+    memset(data,0,sizeof(data));
+    sprintf(data,"1\n");
+    if(send_pack(atoi(fd),START,strlen(data),data)<0){
+        my_err("write",__LINE__);
+    }
+    //发送文件
+    File_pack buffer;
+    memset(&buffer,0,sizeof(buffer));
+    while((len=fread(buffer.data,sizeof(char),512,fp))>0)
+    {
+        //printf("len is %d\n",len);
+        buffer.type='1';
+        sprintf(buffer.len,"%d",len);
+        printf("len is %s\nbuffer.data is\n%s",buffer.len,buffer.data);
+        if(send(atoi(fd),&buffer,len+5,0)<0)
+        {
+            printf("Send File:%s Failed./n", filename);
+            break;
+        }
+        //sleep(1);
+        memset(&buffer,0,sizeof(buffer));
+    }
+    //sleep(1);
+    //发送END包
+    memset(&buffer,0,sizeof(buffer));
+    buffer.type='0';
+    if(send(atoi(fd),&buffer,1,0)<0){
+        printf("Send File:%s Failed./n", filename);
+    }
+    /*while((len=fread(buffer,sizeof(char),96-strlen(filename),fp)) > 0)
     {
         memset(send_buf,0,sizeof(send_buf));
         sprintf(send_buf,"1\n%s\n%s",filename,buffer);
@@ -73,8 +110,9 @@ void *recv_file(void *arg)
             my_err("write",__LINE__);
         }
         memset(buffer,0,sizeof(buffer));
-    }
+    }*/
     // 关闭文件
+    close(atoi(fd));
     fclose(fp);
     free(arg);
     printf("recvfile over\n");

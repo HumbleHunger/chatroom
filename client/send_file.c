@@ -16,7 +16,7 @@ int send_file()
     P_LOCK;
     printf("请输入您要发送的文件路径\n");
     P_UNLOCK;
-    char filename[1024];
+    char filename[256];
     scanf("%s",filename);
     FILE *fp;
     if((fp=fopen(filename,"r"))==NULL){
@@ -47,9 +47,15 @@ int send_file()
     pthread_t tid;
     char *arg=(char *)malloc(1024*sizeof(char));
     memset(arg,0,sizeof(arg));
-    sprintf(arg,"%s\n%s\n",fid,filename);
+    sprintf(arg,"%s\n",filename);
     P_LOCK;
     printf("\t\t\t\t\t正在发送文件至服务器\n");
     P_UNLOCK;
     pthread_create(&tid,NULL,realfile,(void *)arg);
+    memset(send_buf,0,sizeof(send_buf));
+    sprintf(send_buf,"%s\n%s\n%s\n",user_id,fid,filename);
+    //printf("sendfile send_buf is %s",send_buf);//
+    if(send_pack(connfd,SENDFILE,strlen(send_buf),send_buf)<0){
+        my_err("write",__LINE__);
+    }
 }

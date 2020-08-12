@@ -23,7 +23,7 @@
 #include<pthread.h>
 #include<errno.h>
 #include<signal.h>
-#define SERV_PORT 8848//服务器端口号
+#define SERV_PORT 8000//服务器端口号
 
 enum{
     LOGIN=1,
@@ -68,10 +68,26 @@ typedef struct {
     char len[4];
     char data[1024];
 }File_pack;
+typedef struct node{
+    int connfd;
+    int len;
+    char *pack;
+    struct node *next;
+}queue_node;
+typedef struct{
+    queue_node *head;
+    queue_node *tail;
+}Queue;
+
+Queue pack_queue;
 MYSQL mysql;
 FILE* log;
 pthread_key_t key;
 int epfd;
+int listenfd;
+
+pthread_mutex_t mutex1;
+pthread_cond_t cond1;
 
 void setblock(int sock);
 void setnoblock(int sock);
@@ -79,8 +95,13 @@ void *unpack(void *arg);
 int my_read(int conn_fd,void *buf,int len);
 int get_arg(char *read_buf,char *recv_buf,int len);
 int send_pack(int connfd,int type,int len,char *value);
+int send_packs(int connfd,int type,int len,char *value);
 int my_write(int connfd,char *send_buf,int len);
 void my_err(const char *str,int line);
+
+int add_pack(int connfd,char *pack,int len);
+int del_pack();
+void *send_thread(void *arg);
 
 int offline(char *id,int connfd);
 void *login(void *arg);
@@ -112,4 +133,6 @@ void *gchatmsg(void *arg);
 void *send_file(void *arg);
 void *recv_file(void *arg);
 void *realfile(void *arg);
+
+void serverover(int num);
 #endif

@@ -17,7 +17,7 @@ void *realfile(void *arg)
         fprintf(stderr,"get_arg failed\n");
     }
     pathname[len]=0;
-    printf("pathname is %s\n",pathname);//
+    //printf("pathname is %s\n",pathname);//
     //从路径名中解析出文件名
     char filename[257];
     len=0;

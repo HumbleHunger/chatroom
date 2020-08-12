@@ -20,7 +20,7 @@ int send_file()
     scanf("%s",filename);
     FILE *fp;
     if((fp=fopen(filename,"r"))==NULL){
-        printf("请输入正确的文件路径\n");
+        printf("\t\t\t\t\t请输入正确的文件路径\n");
         return 0;
     }
     fclose(fp);
@@ -32,7 +32,7 @@ int send_file()
         my_err("write",__LINE__);
     }
     P_LOCK;
-    printf("正在处理中\n");
+    printf("\t\t\t\t\t正在处理中\n");
     P_UNLOCK;
     S_LOCK;
     //printf("wait?\n");

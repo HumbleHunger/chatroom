@@ -47,12 +47,14 @@ int main()
     sigemptyset(&set);
     sigaddset(&set,SIGPIPE);
     sigprocmask(SIG_BLOCK,&set,NULL);
+    //signal(SIGINT,serverover);
+    printf("start\n");
     //log=fopen("log","w");
     //初始化线程私有数据
     pthread_key_create(&key,NULL);
 
     //初始化服务器TCP套接字
-    int listenfd=socket(AF_INET,SOCK_STREAM,0);
+    listenfd=socket(AF_INET,SOCK_STREAM,0);
     if(listenfd<0){
         my_err("socket",__LINE__);
     }
@@ -89,8 +91,8 @@ int main()
 		my_err("mysql_library_init", __LINE__);
 	}
     
-    //连接数据库
-    if(NULL == mysql_real_connect(&mysql, "127.0.0.1", "root", "Lyj011007.", "chatroom", 0, NULL, 0)){
+    //连接数据
+    if(NULL == mysql_real_connect(&mysql, "127.0.0.1", "Linux_8748", "15879608748", "chat_room_8748", 0, NULL, 0)){
 		my_err("mysql_real_connect", __LINE__);
 	}
 	
@@ -102,7 +104,10 @@ int main()
 
     //初始化线程池
     pool_init(10);
-    
+    pthread_mutex_init(&mutex1,NULL);
+    pthread_cond_init(&cond1,NULL);
+    pthread_t tid;
+    pthread_create(&tid,NULL,send_thread,NULL);
     //初始化epoll
     epfd=epoll_create(20);
     if(epfd<0){
@@ -171,4 +176,15 @@ int main()
     close(epfd);
     pthread_key_delete(key);
     return 0;
+}
+void serverover(int num)
+{
+    close(listenfd);
+    pool_destroy();
+    close(epfd);
+    pthread_key_delete(key);
+    pthread_mutex_destroy(&mutex1);
+    pthread_cond_destroy(&cond1);
+    printf("server exit\n");
+    exit(0);
 }

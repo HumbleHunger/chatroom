@@ -231,7 +231,6 @@ void *msgbox(void *arg)
             }
         }
         case FCHAT:{
-            printf("fchat start???\n");
             char send_id[10];
             memset(send_id,0,sizeof(send_id));
             if(get_arg(recv_buf,send_id,sizeof(send_id))<0){
@@ -299,12 +298,12 @@ void *msgbox(void *arg)
             }
             if(gid[0]=='0'){
                 P_LOCK;
-                printf("群名重复，请重新创建群\n");
+                printf("\t\t\t\t\t群名重复，请重新创建群\n");
                 P_UNLOCK;
                 break;
             }
             P_LOCK;
-            printf("您所创建的群ID为%s\n",gid);
+            printf("\t\t\t\t\t您所创建的群ID为%s\n",gid);
             P_UNLOCK;
             break;
         }
@@ -316,7 +315,7 @@ void *msgbox(void *arg)
             }
             if(gid[0]=='0'){
                 P_LOCK;
-                printf("您没有加入任何群\n");
+                printf("\t\t\t\t\t您没有加入任何群\n");
                 P_UNLOCK;
                 break;
             }
@@ -343,13 +342,13 @@ void *msgbox(void *arg)
             }
             if(mid[0]=='0'){
                 P_LOCK;
-                printf("此群不存在\n");
+                printf("\t\t\t\t\t此群不存在\n");
                 P_UNLOCK;
                 break;
             }
             else if(mid[0]=='a'){
                 P_LOCK;
-                printf("您已是群成员\n");
+                printf("\t\t\t\t\t您已是群成员\n");
                 P_UNLOCK;
                 break;
             }

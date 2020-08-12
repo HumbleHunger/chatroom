@@ -53,7 +53,7 @@ void *recv_file(void *arg)
     if(row==NULL){
         memset(data,0,sizeof(data));
         sprintf(data,"0\n");
-        if(send_pack(atoi(fd),RECVFILE,strlen(data),data)<0){
+        if(send_packs(atoi(fd),RECVFILE,strlen(data),data)<0){
             my_err("write",__LINE__);
         }
         close(atoi(fd));
@@ -63,7 +63,7 @@ void *recv_file(void *arg)
     else{
         memset(data,0,sizeof(data));
         sprintf(data,"1\n");
-        if(send_pack(atoi(fd),RECVFILE,strlen(data),data)<0){
+        if(send_packs(atoi(fd),RECVFILE,strlen(data),data)<0){
             my_err("write",__LINE__);
         }
         printf("send 1 to %s\n",fd);
@@ -74,7 +74,7 @@ void *recv_file(void *arg)
     //发送下EPOLL完成
     memset(data,0,sizeof(data));
     sprintf(data,"1\n");
-    if(send_pack(atoi(fd),START,strlen(data),data)<0){
+    if(send_packs(atoi(fd),START,strlen(data),data)<0){
         my_err("write",__LINE__);
     }
     //发送文件

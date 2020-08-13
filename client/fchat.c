@@ -15,7 +15,7 @@ int fchat()
     memset(fid,0,sizeof(fid));
     scanf("%s",fid);
     if(strcmp(user_id,fid)==0){
-        printf("请不要与自己聊天\n");
+        printf("\t\t\t\t\t请不要与自己聊天\n");
         return 0;
     }
     strcpy(chat_id,fid);

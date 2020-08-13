@@ -36,7 +36,7 @@ void *addgroup(void *arg)
     //查询群是否存在
     char cmd[1024];
     memset(cmd,0,sizeof(cmd));
-    sprintf(cmd,"select * from group_member where group_id = %s && member_id = %s",gid,uid);
+    sprintf(cmd,"select link from group_member where group_id = %s && member_id = %s",gid,uid);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
@@ -46,10 +46,19 @@ void *addgroup(void *arg)
     result=mysql_store_result(&mysql);
     row=mysql_fetch_row(result);
     if(row){
-        sprintf(data,"a\n");//已是成员
-        free(arg);
-        if(send_pack(atoi(fd),ADDGROUP,strlen(data),data)<0){
-            my_err("write",__LINE__);
+        if(row[0][0]=='1'){
+            sprintf(data,"1\n");//已是成员
+            free(arg);
+            if(send_pack(atoi(fd),ADDGROUP,strlen(data),data)<0){
+                my_err("write",__LINE__);
+            }
+        }
+        else if(row[0][0]=='0'){
+            sprintf(data,"2\n");//重复发送申请
+            free(arg);
+            if(send_pack(atoi(fd),ADDGROUP,strlen(data),data)<0){
+                my_err("write",__LINE__);
+            }
         }
         return 0;
     }
@@ -104,7 +113,7 @@ void *addgroup(void *arg)
         rows=mysql_fetch_row(results);
         if(strcmp(rows[0],"1")==0){
             memset(data,0,sizeof(data));
-            sprintf(data,"%s\n%s\n",uid,gid);
+            sprintf(data,"3\n%s\n%s\n",uid,gid);
             if(send_pack(atoi(rows[1]),ADDGROUP,strlen(data),data)<0){
                 my_err("write",__LINE__);
             }

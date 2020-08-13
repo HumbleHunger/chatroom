@@ -27,7 +27,6 @@ void *findfriend(void *arg)
     //调用mysql查询用户信息
     char cmd[1024];
     memset(cmd,0,sizeof(cmd));
-    //查询并储存所有好友id
     sprintf(cmd,"select name,state from user_data where id = '%s'",id);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
@@ -37,15 +36,24 @@ void *findfriend(void *arg)
 	MYSQL_ROW row;
     result=mysql_store_result(&mysql);
     row=mysql_fetch_row(result);
-
     char data[1024];
+    if(row==NULL){
+        memset(data,0,sizeof(data));
+        sprintf(data,"0\n");
+        if(send_pack(atoi(fd),FINDFRIEND,strlen(data),data)<0){
+            my_err("write",__LINE__);
+        }
+        free(arg);
+        printf("findfriend over\n");//
+        return 0;
+    }
     memset(data,0,sizeof(data));
     sprintf(data,"%s\n%s\n%s\n",id,row[0],row[1]);
     if(send_pack(atoi(fd),FINDFRIEND,strlen(data),data)<0){
         my_err("write",__LINE__);
     }
     free(arg);
-    printf("friendlist over\n");//
+    printf("findfriend over\n");//
     return 0;
 }
 

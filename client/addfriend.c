@@ -17,7 +17,7 @@ int addfriend()
     scanf("%s",fid);
     S_UNLOCK;
     if(strcmp(user_id,fid)==0){
-        printf("请勿添加自己为好友\n");
+        printf("\t\t\t\t\t请勿添加自己为好友\n");
         return 0;
     }
     char send_buf[1024];

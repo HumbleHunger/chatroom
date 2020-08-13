@@ -34,7 +34,7 @@ void *groupmember(void *arg)
     char cmd[1024];
     memset(cmd,0,sizeof(cmd));
     //查询群成员记录是否存在
-    sprintf(cmd,"select * from group_member where member_id = %s && group_id = %s",id,gid);
+    sprintf(cmd,"select * from group_member where member_id = %s && group_id = %s && link = 1",id,gid);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
@@ -57,7 +57,7 @@ void *groupmember(void *arg)
     }
     //查询并储存所有成员id
     memset(cmd,0,sizeof(cmd));
-    sprintf(cmd,"select member_id from group_member where group_id = '%s'",gid);
+    sprintf(cmd,"select member_id from group_member where group_id = '%s' && link = 1",gid);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);

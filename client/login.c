@@ -41,8 +41,12 @@ int login()
         print_meau();
         return 0;
     }
-    else{
+    else if(recv_buf[0]=='0'){
         printf("用户id或密码错误\n");
+        return 0;
+    }
+    else if(recv_buf[0]=='2'){
+        printf("此账号已在线请勿重复登录\n");
         return 0;
     }
 }

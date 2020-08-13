@@ -9,10 +9,16 @@
 int dealgroup()
 {
     GM_LOCK;
+    if(Gm.num==0){
+        printf("您暂时没有群验证消息\n");
+        GM_UNLOCK;
+        return 0;
+    }
     GM *operate=Gm.head;
     int chose=0;
     char send_buf[1024];
     while(operate){
+        memset(send_buf,0,sizeof(send_buf));
         P_LOCK;
         printf("%s申请加入群%s\n",operate->member_id,operate->group_id);
         printf("1.同意\t\t2.拒绝\n");

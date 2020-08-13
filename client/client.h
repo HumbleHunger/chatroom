@@ -52,7 +52,11 @@ enum{
     RECVFILE,
     REALFILE,
     START,
+    DEALFRIEND,
+    RECOVERF,
 };
+#define FR_LOCK pthread_mutex_lock(&fr_mutex)
+#define FR_UNLOCK pthread_mutex_unlock(&fr_mutex)
 #define GM_LOCK pthread_mutex_lock(&gm_mutex)
 #define GM_UNLOCK pthread_mutex_unlock(&gm_mutex)
 #define LOCK pthread_mutex_lock(&mutex)
@@ -87,6 +91,17 @@ typedef struct fmsgh{
     Fmsg *tail;
     int num;
 }Msghead;
+//好友申请
+typedef struct fr{
+    char send_id[10];
+    struct fr* next;
+}Freq;
+//好友申请链表
+typedef struct frl{
+    Freq *head;
+    Freq *tail;
+    int num;
+}Freqhead;
 //群成员申请
 typedef struct gm{
     char member_id[10];
@@ -116,6 +131,7 @@ typedef struct gmsgh{
 Msghead Msg;
 GMhead Gm;
 Gmsghead Gsg;
+Freqhead Frh;
 
 int exit_flag;//用户注销标识
 char user_id[10];//用户id
@@ -130,7 +146,7 @@ int realfile_read_len;
 struct sockaddr_in serv_addr;//服务器地址
 
 //读写锁
-pthread_mutex_t p_mutex,s_mutex,mutex,gm_mutex;
+pthread_mutex_t p_mutex,s_mutex,mutex,gm_mutex,fr_mutex;
 pthread_cond_t cond;
 
 int send_pack(int connfd,int type,int len,char *value);
@@ -149,9 +165,13 @@ int printnode();
 
 int addgmsg(char *mid,char *gid,char *msg);
 int printgnode();
+int delgmsgnode();
 
 int addgnode(char *member_id,char *group_id);
 int delgnode();
+
+int addfrnode(char *send_id);
+int delfrnode();
 
 int print_main();
 int login();
@@ -167,6 +187,8 @@ int delfriend();
 int blockfriend();
 int fchat();
 int fchatmsg();
+int dealfriend();
+int recoverf();
 
 int print_group();
 int creategroup();

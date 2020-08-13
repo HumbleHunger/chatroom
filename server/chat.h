@@ -56,6 +56,8 @@ enum{
     RECVFILE,
     REALFILE,
     START,
+    DEALFRIEND,
+    RECOVERF,
 };
 
 typedef struct{
@@ -133,6 +135,8 @@ void *gchatmsg(void *arg);
 void *send_file(void *arg);
 void *recv_file(void *arg);
 void *realfile(void *arg);
+void *dealfriend(void *arg);
+void *recoverf(void *arg);
 
 void serverover(int num);
 #endif

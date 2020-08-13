@@ -11,15 +11,17 @@ void *realfile(void *arg)
     //printf("realfile start\n");
     int len=0;
     realfile_read_len=0;
-    //获取文件路径
+    /*//获取文件路径
     char pathname[256];
     if((len=realfile_get_arg(arg,pathname,10))<0){
         fprintf(stderr,"get_arg failed\n");
     }
     pathname[len]=0;
-    //printf("pathname is %s\n",pathname);//
+    printf("pathname is %s\n",pathname);*/
     //从路径名中解析出文件名
     char filename[257];
+    char *pathname=(char *)arg;
+    //printf("pathname is %s",pathname);
     len=0;
     for(int i=0;i<strlen(pathname);i++){
         if(pathname[i]=='/'){
@@ -29,6 +31,7 @@ void *realfile(void *arg)
         filename[len++]=pathname[i];
     }
     filename[len]=0;
+    //printf("filename is %s",filename);
     //创建TCP套接字用于传输文件
     filefd=socket(AF_INET,SOCK_STREAM,0);
     if(filefd<0){
@@ -39,6 +42,14 @@ void *realfile(void *arg)
         my_err("connect",__LINE__);
     }
     FILE *fp=fopen(pathname,"r");
+    if((fp=fopen(pathname,"r"))==NULL){
+        close(filefd);
+        printf("fopen is Failed\n");
+        free(arg);
+        pthread_exit(NULL);
+        printf("fopen is Failed\n");
+
+    }
     //发送发文件请求
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));

@@ -57,6 +57,16 @@ void *msgbox(void *arg)
                 printf("\t\t\t\t\t好友不存在\n");
                 P_UNLOCK;
             }
+            else if(flag[0]=='2'){
+                P_LOCK;
+                printf("\t\t\t\t\t请勿重复发送好友申请\n");
+                P_UNLOCK;
+            }
+            else if(flag[0]=='3'){
+                P_LOCK;
+                printf("\t\t\t\t\t请勿重复添加好友\n");
+                P_UNLOCK;
+            }
             else if(flag[0]=='1'){
                 char fid[10];
                 memset(fid,0,sizeof(fid));
@@ -64,42 +74,45 @@ void *msgbox(void *arg)
                     my_err("read",__LINE__);
                 }
                 P_LOCK;
-                printf("\t\t\t\t\t%s申请添加您为好友\n",fid);
-                printf("\t\t\t\t\t同意请向%s发送好友申请\n\t\t\t\t\t拒绝则忽略\n",fid);
+                printf("\t\t\t\t\t您有一条好友验证消息\n");
                 P_UNLOCK;
-                /*
-                int ch;
-                S_LOCK;
-                scanf("%d",&ch);
-                S_UNLOCK;
-                printf("ch is %d\n",ch);
-                if(ch==1){
-                    char send_buf[1024];
-                    memset(send_buf,0,sizeof(send_buf));
-                    sprintf(send_buf,"%s\n%s\n",user_id,fid);
-                    printf("addfriend send_buf is %s",send_buf);//
-                    if(send_pack(connfd,ADDFRIEND,strlen(send_buf),send_buf)<0){
-                        my_err("write",__LINE__);
-                    }
-                }
-                else(chose==2){
-                    
-            }*/
+                addfrnode(fid);
             }
-            else if(flag[0]=='2'){
+            else if(flag[0]=='4'){
                 char fid[10];
                 memset(fid,0,sizeof(fid));
                 if(get_arg(recv_buf,fid,sizeof(fid))<0){
                     my_err("read",__LINE__);
                 }
                 P_LOCK;
-                printf("\t\t\t\t\t%s已同意您的好友请求\n",fid);
+                printf("\t\t\t\t\t您有未处理的好友验证消息\n");
                 P_UNLOCK;
+                addfrnode(fid);
             }
-            else if(flag[0]=='3'){
+            break;
+        }
+        case DEALFRIEND:{
+            char flag[2];
+            memset(flag,0,sizeof(flag));
+            if(get_arg(recv_buf,flag,sizeof(flag))<0){
+                my_err("read",__LINE__);
+            }
+            char fid[10];
+            memset(fid,0,sizeof(fid));
+            if(get_arg(recv_buf,fid,sizeof(fid))<0){
+                my_err("read",__LINE__);
+            }
+            if(flag[0]=='1'){
                 P_LOCK;
-                printf("\t\t\t\t\t请勿重复添加好友\n");
+                printf("\t\t\t\t\t%s同意了您的好友申请\n",fid);
                 P_UNLOCK;
+                break;
+            }
+            else if(flag[0]=='2'){
+                P_LOCK;
+                printf("\t\t\t\t\t%s拒绝了您的好友申请\n",fid);
+                P_UNLOCK;
+                break;
             }
             break;
         }
@@ -135,6 +148,12 @@ void *msgbox(void *arg)
             memset(fid,0,sizeof(fid));
             if(get_arg(recv_buf,fid,sizeof(fid))<0){
                 my_err("read",__LINE__);
+            }
+            if(fid[0]=='0'){
+                P_LOCK;
+                printf("此用户不存在\n");
+                P_UNLOCK;
+                break;
             }
             char name[32];
             memset(name,0,sizeof(name));
@@ -185,6 +204,11 @@ void *msgbox(void *arg)
             else if(flag[0]=='1'){
                 P_LOCK;
                 printf("\t\t\t\t\t拉黑成功\n");
+                P_UNLOCK;
+            }
+            else if(flag[0]=='2'){
+                P_LOCK;
+                printf("\t\t\t\t\t您已经屏蔽此好友\n");
                 P_UNLOCK;
             }
             break;
@@ -335,31 +359,50 @@ void *msgbox(void *arg)
             break;
         }
         case ADDGROUP:{
-            char mid[10];
-            memset(mid,0,sizeof(mid));
-            if(get_arg(recv_buf,mid,sizeof(mid))<0){
+            char flag[2];
+            memset(flag,0,sizeof(flag));
+            if(get_arg(recv_buf,flag,sizeof(flag))<0){
                 my_err("read",__LINE__);
             }
-            if(mid[0]=='0'){
+            printf("flag is %c\n",flag[0]);
+            if(flag[0]=='0'){
                 P_LOCK;
                 printf("\t\t\t\t\t此群不存在\n");
                 P_UNLOCK;
                 break;
             }
-            else if(mid[0]=='a'){
+            else if(flag[0]=='1'){
                 P_LOCK;
                 printf("\t\t\t\t\t您已是群成员\n");
                 P_UNLOCK;
                 break;
+            }
+            else if(flag[0]=='2'){
+                P_LOCK;
+                printf("\t\t\t\t\t请勿重复发送群申请\n");
+                P_UNLOCK;
+                break;
+            }
+            char mid[10];
+            memset(mid,0,sizeof(mid));
+            if(get_arg(recv_buf,mid,sizeof(mid))<0){
+                my_err("read",__LINE__);
             }
             char gid[10];
             memset(gid,0,sizeof(gid));
             if(get_arg(recv_buf,gid,sizeof(gid))<0){
                 my_err("read",__LINE__);
             }
-            P_LOCK;
-            printf("\t\t\t\t\t您收到一条群验证消息\n");
-            P_UNLOCK;
+            else if(flag[0]=='3'){
+                P_LOCK;
+                printf("\t\t\t\t\t您收到一条群验证消息\n");
+                P_UNLOCK;
+            }
+            else if(flag[0]=='4'){
+                P_LOCK;
+                printf("\t\t\t\t\t您有未处理的群验证消息\n");
+                P_UNLOCK;
+            }
             addgnode(mid,gid);
             break;
         }
@@ -526,6 +569,32 @@ void *msgbox(void *arg)
             else if(flag[0]=='2'){
                 P_LOCK;
                 printf("\t\t\t\t\t您已成功解散该群\n");
+                P_UNLOCK;
+                break;
+            }
+        }
+        case RECOVERF:{
+            char flag[2];
+            memset(flag,0,sizeof(flag));
+            if(get_arg(recv_buf,flag,sizeof(flag))<0){
+                my_err("read",__LINE__);
+            }
+            //printf("flag is %c\n",flag[0]);//
+            if(flag[0]=='0'){
+                P_LOCK;
+                printf("\t\t\t\t\t好友不存在\n");
+                P_UNLOCK;
+                break;
+            }
+            else if(flag[0]=='1'){
+                P_LOCK;
+                printf("\t\t\t\t\t好友关系正常\n");
+                P_UNLOCK;
+                break;
+            }
+            else if(flag[0]=='2'){
+                P_LOCK;
+                printf("\t\t\t\t\t好友关系恢复\n");
                 P_UNLOCK;
                 break;
             }

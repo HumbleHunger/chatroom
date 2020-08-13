@@ -34,7 +34,7 @@ void *blockfriend(void *arg)
     char cmd[1024];
     memset(cmd,0,sizeof(cmd));
     //查询好友是否存在
-    sprintf(cmd,"select link from friend where (user = %s && friend = %s) || (user = %s && friend = %s)",uid,fid,fid,uid);
+    sprintf(cmd,"select link,state from friend where (user = %s && friend = %s) || (user = %s && friend = %s)",uid,fid,fid,uid);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
@@ -59,6 +59,16 @@ void *blockfriend(void *arg)
     if(strcmp(row[0],"0")==0){
         memset(data,0,sizeof(data));
         sprintf(data,"0\n");
+        if(send_pack(atoi(fd),BLOCKFRIEND,strlen(data),data)<0){
+            my_err("write",__LINE__);
+        }
+        free(arg);
+        printf("blockfriend over\n");
+        return NULL;
+    }
+    if(strcmp(row[1],"0")==0){
+        memset(data,0,sizeof(data));
+        sprintf(data,"2\n");
         if(send_pack(atoi(fd),BLOCKFRIEND,strlen(data),data)<0){
             my_err("write",__LINE__);
         }

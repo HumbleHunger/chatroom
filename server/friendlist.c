@@ -28,7 +28,7 @@ void *friendlist(void *arg)
     char cmd[1024];
     memset(cmd,0,sizeof(cmd));
     //查询并储存所有好友id
-    sprintf(cmd,"select friend from friend where user = '%s'",id);
+    sprintf(cmd,"select friend from friend where user = '%s' && link = 1",id);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);

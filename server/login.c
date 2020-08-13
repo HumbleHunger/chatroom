@@ -34,7 +34,7 @@ void *login(void *arg)
     //调用mysql查询用户信息
     char cmd[1024];
     memset(cmd,0,sizeof(cmd));
-    sprintf(cmd,"select password from user_data where id = '%s'",id);
+    sprintf(cmd,"select password,state,socket from user_data where id = '%s'",id);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
@@ -58,6 +58,14 @@ void *login(void *arg)
         }
         return NULL;
         //close(atoi(fd));
+    }
+    if(row[1][0]=='1' && row[2][0]!='0'){
+        sprintf(data,"2\n");
+        free(arg);
+        if(send_pack(atoi(fd),LOGIN,strlen(data),data)<0){
+            my_err("write",__LINE__);
+        }
+        return NULL;
     }
     if(row[0]!=NULL){
         printf("mysql data is %s\n",row[0]);

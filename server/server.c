@@ -92,7 +92,7 @@ int main()
 	}
     
     //连接数据
-    if(NULL == mysql_real_connect(&mysql, "127.0.0.1", "Linux_8748", "15879608748", "chat_room_8748", 0, NULL, 0)){
+    if(NULL == mysql_real_connect(&mysql, "127.0.0.1", "root", "Lyj011007.", "chatroom", 0, NULL, 0)){
 		my_err("mysql_real_connect", __LINE__);
 	}
 	
@@ -101,7 +101,13 @@ int main()
 		my_err("mysql_set_character_set", __LINE__);
 	}
 	//fprintf(log,"连接mysql数据库成功!\n");
-
+    
+    char cmd[1024];
+    memset(cmd,0,sizeof(cmd));
+    sprintf(cmd,"update user_data set state=0,socket=0");
+    if(mysql_query(&mysql, cmd)<0){
+        my_err("mysql_query",__LINE__);
+    }
     //初始化线程池
     pool_init(10);
     pthread_mutex_init(&mutex1,NULL);
@@ -154,6 +160,13 @@ int main()
             else if(ep_events[i].events & EPOLLRDHUP){
                 printf("有客户挂断\n");
                 close(ep_events[i].data.fd);  
+                char cmd[1024];
+                memset(cmd,0,sizeof(cmd));
+                sprintf(cmd,"update user_data set socket = 0 , state = 0 where socket = %d",ep_events[i].data.fd);
+                printf("cmd is %s\n",cmd);//
+                if(mysql_query(&mysql, cmd)<0){
+                    my_err("mysql_query",__LINE__);
+                }
                 epoll_ctl(epfd,EPOLL_CTL_DEL,ep_events[i].data.fd,NULL);
                 fprintf(stderr,"%d is be closed\n",ep_events[i].data.fd);
                 continue;

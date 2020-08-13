@@ -56,7 +56,7 @@ int offline(char *id,int connfd)
         my_err("mysql_query",__LINE__);
     }
     //查询是否有离线好友申请
-    sprintf(cmd,"select send_id from friend_request where recv_id = %s && state = 0",id);
+    sprintf(cmd,"select send_id from friend_request where recv_id = %s",id);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
@@ -64,7 +64,7 @@ int offline(char *id,int connfd)
     result=mysql_store_result(&mysql);
     while(row=mysql_fetch_row(result)){
         memset(data,0,sizeof(data));
-        sprintf(data,"1\n%s\n",row[0]);
+        sprintf(data,"4\n%s\n",row[0]);
         if(send_pack(connfd,ADDFRIEND,strlen(data),data)<0){
             my_err("write",__LINE__);
         }
@@ -78,7 +78,7 @@ int offline(char *id,int connfd)
     }
     //查询是否有离线加群申请
     memset(cmd,0,sizeof(cmd));
-    sprintf(cmd,"select send_id,group_id from group_request where recv_id = %s && state = 0",id);
+    sprintf(cmd,"select send_id,group_id from group_request where recv_id = %s",id);
     printf("cmd is %s\n",cmd);//
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
@@ -86,7 +86,7 @@ int offline(char *id,int connfd)
     result=mysql_store_result(&mysql);
     while(row=mysql_fetch_row(result)){
         memset(data,0,sizeof(data));
-        sprintf(data,"%s\n%s\n",row[0],row[1]);
+        sprintf(data,"4\n%s\n%s\n",row[0],row[1]);
         if(send_pack(connfd,ADDGROUP,strlen(data),data)<0){
             my_err("write",__LINE__);
         }

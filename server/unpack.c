@@ -101,6 +101,9 @@ void *unpack(void *arg)
         case ADDFRIEND:
         add_work(addfriend,(void *)argv);
         break;
+        case DEALFRIEND:
+        add_work(dealfriend,(void *)argv);
+        break;
         case DELFRIEND:
         add_work(delfriend,(void *)argv);
         break;
@@ -115,6 +118,9 @@ void *unpack(void *arg)
         break;
         case BLOCKFRIEND:
         add_work(blockfriend,(void *)argv);
+        break;
+        case RECOVERF:
+        add_work(recoverf,(void *)argv);
         break;
         case GCHAT:
         add_work(gchat,(void *)argv);

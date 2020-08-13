@@ -43,6 +43,7 @@ void *dealgroup(void *arg)
     //查询请求是否已被处理
     memset(cmd,0,sizeof(cmd));
     sprintf(cmd,"select link from group_request where send_id = %s && group_id = %s",mid,gid);
+    printf("%s\n",cmd);
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
     }
@@ -50,10 +51,10 @@ void *dealgroup(void *arg)
 	MYSQL_ROW row;
     result=mysql_store_result(&mysql);
     row=mysql_fetch_row(result);
-    if(strcmp(row[0],"1")==0){
+    if(row==NULL){
         //发送消息
         memset(msg,0,sizeof(msg));
-        sprintf(msg,"0\n");
+        sprintf(msg,"0\n");//已被处理
         if(send_pack(atoi(fd),DEALGROUP,strlen(msg),msg)<0){
             my_err("write",__LINE__);
         }
@@ -85,7 +86,7 @@ void *dealgroup(void *arg)
     }
     else if(flag[0]=='2'){
         memset(cmd,0,sizeof(cmd));
-        sprintf(cmd,"delete from group where member_id = %s && group_id = %s",mid,gid);
+        sprintf(cmd,"delete from group_member where member_id = %s && group_id = %s",mid,gid);
         printf("cmd is %s\n",cmd);//
         if(mysql_query(&mysql, cmd)<0){
             my_err("mysql_query",__LINE__);
@@ -98,7 +99,8 @@ void *dealgroup(void *arg)
     }
     //修改处理状态
     memset(cmd,0,sizeof(cmd));
-    sprintf(cmd,"update group_request set link = 1 where send_id = %s && group_id = %s",mid,gid);
+    sprintf(cmd,"delete from group_request where send_id = %s && group_id = %s",mid,gid);
+    printf("%s\n",cmd);
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
     }

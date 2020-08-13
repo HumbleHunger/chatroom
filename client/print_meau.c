@@ -34,6 +34,10 @@ int print_meau()
                 char data[11];
                 sprintf(data,"%s\n",user_id);
                 send_pack(connfd,OVER,strlen(data),data);
+                delgnode();
+                delfrnode();
+                delgmsgnode();
+                delnode();
                 return 0;
                 break;
             }

@@ -63,14 +63,13 @@ void *realfile(void *arg)
         if(my_read(conn_fd,buffer,atoi(len))<0){
             my_err("read",__LINE__);
         }
-        printf("buffer is %s\n",buffer);
+        //printf("buffer is %s\n",buffer);
         if(fwrite(buffer,sizeof(char),atoi(len),fp)<atoi(len))
         {
             printf("File:\t%s Write Failed\n", filename);
             break;
         }
     }
-    printf("recv over\n");
     fclose(fp);
     close(atoi(fd));
     free(arg);

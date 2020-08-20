@@ -8,8 +8,10 @@
 #include"client.h"
 int print_friend()
 {
+    int chose;
     while(1){
         P_LOCK;
+        printf("\n好友管理\n");
         printf("1.查看好友列表\n");
         printf("2.添加好友\n");
         printf("3.删除好友\n");
@@ -22,10 +24,15 @@ int print_friend()
         printf("10.查看好友聊天记录\n");
         printf("0.返回\n");
         P_UNLOCK;
-        int chose;
-        //S_LOCK;
+        chose=-1;
         scanf("%d",&chose);
-        //S_UNLOCK;
+        if(getchar()!='\n'){
+            P_LOCK;
+            printf("\t\t\t\t\t请勿非法输入1!\n");
+            P_UNLOCK;
+            while((getchar())!='\n');
+            continue;
+        }
         switch(chose){
             case 1:
             friendlist();
@@ -59,6 +66,12 @@ int print_friend()
             break;
             case 0:
             return 0;
+            break;
+            default:
+            P_LOCK;
+            printf("\t\t\t\t\t请勿非法输入!\n");
+            P_UNLOCK;
+            //while((getchar())!='\n');
             break;
         }
     }

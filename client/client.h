@@ -21,6 +21,54 @@
 #include<pthread.h>
 #include<errno.h>
 
+#define Scanf(a) \
+    while(1){\
+        int c,i=0;\
+        while(((c=getchar())!='\n') && (c!=EOF)){\
+            if(c<48 || c>57 || i>sizeof(a)-2){\
+                P_LOCK;\
+                printf("\t\t\t\t\t检测到非法输入!请重新输入\n");\
+                P_UNLOCK;\
+                memset(a,0,sizeof(a));\
+                i=0;\
+                while((c=getchar())!='\n');\
+                break;\
+            }\
+            a[i]=c;\
+            i++;\
+        }\
+        if(i==0){\
+            continue;\
+        }\
+        else{\
+            break;\
+        }\
+    }\
+
+#define Scanfs(a) \
+    while(1){\
+        int c,i=0;\
+        while(((c=getchar())!='\n') && (c!=EOF)){\
+            if(i>sizeof(a)-2){\
+                P_LOCK;\
+                printf("\t\t\t\t\t检测到非法输入!请重新输入\n");\
+                P_UNLOCK;\
+                memset(a,0,sizeof(a));\
+                i=0;\
+                while((c=getchar())!='\n');\
+                break;\
+            }\
+            a[i]=c;\
+            i++;\
+        }\
+        if(i==0){\
+            continue;\
+        }\
+        else{\
+            break;\
+        }\
+    }\
+
 enum{
     LOGIN=1,
     UREGISTER,

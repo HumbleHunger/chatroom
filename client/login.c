@@ -11,13 +11,13 @@ int login()
     printf("请输入您的用户id\n");
     char id[10];
     memset(id,0,sizeof(id));
-    scanf("%s",id);
+    Scanf(id);
     memset(user_id,0,sizeof(user_id));
     sprintf(user_id,"%s",id);//储存id
     printf("请输入您的密码\n");
     char psw[32];
     memset(psw,0,sizeof(psw));
-    scanf("%s",psw);
+    Scanfs(psw);
     //发送消息
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));

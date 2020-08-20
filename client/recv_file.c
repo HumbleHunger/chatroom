@@ -12,12 +12,12 @@ int recv_file()
     printf("请输入文件的发送者ID\n");
     P_UNLOCK;
     char fid[10];
-    scanf("%s",fid);
+    Scanf(fid);
     P_LOCK;
     printf("请输入您要接收的文件名\n");
     P_UNLOCK;
     char filename[256];
-    scanf("%s",filename);
+    Scanfs(filename);
     pthread_t tid;
     char *arg=(char *)malloc(1024*sizeof(char));
     memset(arg,0,sizeof(arg));

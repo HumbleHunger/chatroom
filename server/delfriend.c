@@ -72,6 +72,14 @@ void *delfriend(void *arg)
     if(mysql_query(&mysql, cmd)<0){
         my_err("mysql_query",__LINE__);
     }
+    /*
+    //删除消息记录
+    memset(cmd,0,sizeof(cmd));
+    sprintf(cmd,"delete from chat_msg where (send_id = %s && recv_id = %s) || (send_id = %s && recv_id = %s)",uid,fid,fid,uid);
+    printf("cmd is %s\n",cmd);//
+    if(mysql_query(&mysql, cmd)<0){
+        my_err("mysql_query",__LINE__);
+    }*/
     memset(data,0,sizeof(data));
     sprintf(data,"1\n");
     if(send_pack(atoi(fd),DELFRIEND,strlen(data),data)<0){

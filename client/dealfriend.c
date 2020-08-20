@@ -23,7 +23,24 @@ int dealfriend()
         printf("%s申请添加您为好友\n",operate->send_id);
         printf("1.同意\t\t2.拒绝\n");
         P_UNLOCK;
-        scanf("%d",&chose);
+        while(1){
+            scanf("%d",&chose);
+            if(getchar()!='\n'){
+                P_LOCK;
+                printf("\t\t\t\t\t检测到非法输入!请重新输入\n");
+                P_UNLOCK;
+                while((getchar())!='\n');
+                continue;
+            }
+            if(chose<1 || chose>3){
+                P_LOCK;
+                printf("\t\t\t\t\t检测到非法输入!请重新输入\n");
+                P_UNLOCK;
+                while('\n'!=(getchar()));
+                continue;
+            }
+            break;
+        }
         switch(chose){
             case 1:
             sprintf(send_buf,"%s\n%s\n1\n",user_id,operate->send_id);

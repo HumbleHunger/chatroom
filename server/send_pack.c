@@ -78,7 +78,7 @@ int my_write(int connfd,char *send_buf,int len)
     //循环写数据
     while(nleft>0){
         if((nwrite=write(connfd,bufp,nleft))==-1){
-            if(errno==EWOULDBLOCK){
+            if(errno==EAGAIN){
                 nwrite=0;
             }else{
                 return -1;

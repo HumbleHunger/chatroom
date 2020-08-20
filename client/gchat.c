@@ -12,7 +12,7 @@ int gchat()
     printf("请输入您要群聊的群ID\n");
     P_UNLOCK;
     char gid[10];
-    scanf("%s",gid);
+    Scanf(gid);
     strcpy(chat_id,gid);
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));
@@ -32,10 +32,10 @@ int gchat()
         return 0;
     }
     printf("聊天开始  输入EXITCHAT退出\n");
-    char msg[500];
+    char msg[75];
     while(1){
         memset(msg,0,sizeof(msg));
-        scanf("%s",msg);
+        Scanfs(msg);
         if(strcmp(msg,"EXITCHAT")==0){
             break;
         }

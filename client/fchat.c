@@ -11,9 +11,9 @@ int fchat()
     P_LOCK;
     printf("请输入您要私聊的好友ID\n");
     P_UNLOCK;
-    char fid[10];
+    char *fid=(char *)malloc(10);
     memset(fid,0,sizeof(fid));
-    scanf("%s",fid);
+    Scanf(fid);
     if(strcmp(user_id,fid)==0){
         printf("\t\t\t\t\t请不要与自己聊天\n");
         return 0;
@@ -37,10 +37,10 @@ int fchat()
         return 0;
     }
     printf("聊天开始  输入EXITCHAT退出\n");
-    char msg[500];
+    char msg[75];
     while(1){
         memset(msg,0,sizeof(msg));
-        scanf("%s",msg);
+        Scanfs(msg);
         if(strcmp(msg,"EXITCHAT")==0){
             break;
         }
@@ -54,5 +54,6 @@ int fchat()
     S_UNLOCK;
     chat_flag=0;
     memset(chat_id,0,sizeof(chat_id));
+    free(fid);
     return 0;
 }

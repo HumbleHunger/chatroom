@@ -11,16 +11,18 @@ void *realfile(void *arg)
     //printf("realfile start\n");
     int len=0;
     realfile_read_len=0;
-    /*//获取文件路径
-    char pathname[256];
-    if((len=realfile_get_arg(arg,pathname,10))<0){
+    //获取好友id
+    char *fid=(char *)malloc(10);
+    memset(fid,0,sizeof(fid));
+    if((len=realfile_get_arg(arg,fid,10))<0){
         fprintf(stderr,"get_arg failed\n");
     }
-    pathname[len]=0;
-    printf("pathname is %s\n",pathname);*/
+    fid[len]=0;
+    //printf("fid is %s\n",fid);//
     //从路径名中解析出文件名
-    char filename[257];
-    char *pathname=(char *)arg;
+    char *filename=(char *)malloc(257);
+    memset(filename,0,sizeof(filename));
+    char *pathname=(char *)arg+len+1;
     //printf("pathname is %s",pathname);
     len=0;
     for(int i=0;i<strlen(pathname);i++){
@@ -47,11 +49,9 @@ void *realfile(void *arg)
         printf("fopen is Failed\n");
         free(arg);
         pthread_exit(NULL);
-        printf("fopen is Failed\n");
-
     }
     //发送发文件请求
-    char send_buf[1024];
+    char send_buf[512];
     memset(send_buf,0,sizeof(send_buf));
     sprintf(send_buf,"%s\n",filename);
     if(send_pack(filefd,REALFILE,strlen(send_buf),send_buf)<0){
@@ -86,12 +86,20 @@ void *realfile(void *arg)
     if(send(filefd,&buffer,1,0)<0){
         printf("Send File:%s Failed./n", filename);
     }
-    // 关闭文件和套接字
     close(filefd);
     fclose(fp);
+    //向好友发送文件消息
+    memset(send_buf,0,sizeof(send_buf));
+    sprintf(send_buf,"%s\n%s\n%s\n",user_id,fid,filename);
+    //printf("sendfile send_buf is %s",send_buf);//
+    if(send_pack(connfd,SENDFILE,strlen(send_buf),send_buf)<0){
+        my_err("write",__LINE__);
+    } 
+    // 关闭文件和套接字
     P_LOCK;
     printf("\t\t\t\t\t文件已发送至服务器，等待好友接收\n");
     P_UNLOCK;
+    free(fid);
     free(arg);
     pthread_exit(NULL);
 }

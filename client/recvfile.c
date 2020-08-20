@@ -56,7 +56,7 @@ void *recvfile(void *arg)
     char recv_buf[5];
     memset(recv_buf,0,sizeof(recv_buf));
     unpack(filefd,recv_buf,sizeof(recv_buf));
-    printf("recv_buf[0] is %c\n",recv_buf[0]);
+    //printf("recv_buf[0] is %c\n",recv_buf[0]);
     if(recv_buf[0]=='0'){
         printf("\t\t\t\t\t对方未向您发送文件\n");
         close(filefd);
@@ -65,7 +65,7 @@ void *recvfile(void *arg)
     //接收服务器就绪消息
     memset(recv_buf,0,sizeof(recv_buf));
     unpack(filefd,recv_buf,sizeof(recv_buf));
-    printf("recv_buf[0] is %c\n",recv_buf[0]);
+    //printf("recv_buf[0] is %c\n",recv_buf[0]);
     if(recv_buf[0]=='0'){
         close(filefd);
         pthread_exit(NULL);

@@ -11,9 +11,10 @@ int fchatmsg()
     P_LOCK;
     printf("请输入好友ID\n");
     P_UNLOCK;
-    char fid[10];
+    char *fid=(char *)malloc(10);
+    memset(fid,0,sizeof(fid));
     S_LOCK;
-    scanf("%s",fid);
+    Scanf(fid);
     S_UNLOCK;
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));
@@ -22,5 +23,6 @@ int fchatmsg()
     if(send_pack(connfd,FCHATMSG,strlen(send_buf),send_buf)<0){
         my_err("write",__LINE__);
     }
+    free(fid);
     return 0;
 }

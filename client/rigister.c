@@ -9,21 +9,21 @@
 int uregister()
 {
     printf("请输入您的用户名\n");
-    char name[32];
+    char name[20];
     memset(name,0,sizeof(name));
-    scanf("%s",name);
+    Scanfs(name);
     printf("请输入您的密码\n");
-    char psw[32];
+    char psw[20];
     memset(psw,0,sizeof(psw));
-    scanf("%s",psw);    
+    Scanfs(psw);    
     printf("请输入您的密保问题\n");
-    char question[32];
+    char question[25];
     memset(question,0,sizeof(question));
-    scanf("%s",question);
+    Scanfs(question);
     printf("请输入您的密保答案\n");
-    char answer[32];
+    char answer[25];
     memset(answer,0,sizeof(answer));
-    scanf("%s",answer);
+    Scanfs(answer);
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));
     sprintf(send_buf,"%s\n%s\n%s\n%s\n",name,psw,question,answer);

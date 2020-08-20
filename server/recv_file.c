@@ -86,7 +86,7 @@ void *recv_file(void *arg)
         buffer.type='1';
         sprintf(buffer.len,"%d",len);
         printf("len is %s\nbuffer.data is\n%s",buffer.len,buffer.data);
-        if(send(atoi(fd),&buffer,len+5,0)<0)
+        if(my_write(atoi(fd),(char *)&buffer,len+5)<0)
         {
             printf("Send File:%s Failed./n", filename);
             break;

@@ -10,7 +10,7 @@ int findpsw()
 {
     printf("请输入您的用户ID\n");
     static char uid[10];
-    scanf("%s",uid);
+    Scanf(uid);
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));
     sprintf(send_buf,"%s\n",uid);
@@ -45,7 +45,7 @@ int findpsw()
 
     printf("请输入您的密保答案\n");
     char answer[32];
-    scanf("%s",answer);
+    Scanfs(answer);
     memset(send_buf,0,sizeof(send_buf));
     sprintf(send_buf,"%s\n%s\n",uid,answer);
     //printf("answer send_buf is %s",send_buf);//
@@ -70,7 +70,7 @@ int findpsw()
     read_len=0;
     printf("请输入您的新密码\n");
     char psw[32];
-    scanf("%s",psw);
+    Scanfs(psw);
     memset(send_buf,0,sizeof(send_buf));
     sprintf(send_buf,"%s\n%s\n",uid,psw);
     //printf("findpsw send_buf is %s",send_buf);//

@@ -13,7 +13,7 @@ int gchatmsg()
     P_UNLOCK;
     char gid[10];
     S_LOCK;
-    scanf("%s",gid);
+    Scanf(gid);
     S_UNLOCK;
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));

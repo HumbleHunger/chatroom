@@ -13,9 +13,29 @@ int addfriend()
     P_UNLOCK;
     char fid[10];
     memset(fid,0,sizeof(fid));
-    S_LOCK;
-    scanf("%s",fid);
-    S_UNLOCK;
+    int c,i=0;
+    Scanf(fid);
+    /*while(1){
+        while(((c=getchar())!='\n') && (c!=EOF)){
+            if(c<48 || c>57 || i>8){
+                P_LOCK;
+                printf("\t\t\t\t\t检测到非法输入!请重新输入\n");
+                P_UNLOCK;
+                memset(fid,0,sizeof(fid));
+                i=0;
+                while((c=getchar())!='\n');
+                break;
+            }
+            fid[i]=c;
+            i++;
+        }
+        if(i==0){
+            continue;
+        }
+        else{
+            break;
+        }
+    }*/
     if(strcmp(user_id,fid)==0){
         printf("\t\t\t\t\t请勿添加自己为好友\n");
         return 0;

@@ -8,8 +8,11 @@
 #include"client.h"
 int print_group()
 {
+    int chose;
     while(1){ 
+        chose=-1;
         P_LOCK;
+        printf("\n群管理\n");
         printf("1.查看群列表\n");
         printf("2.查看群成员\n");
         printf("3.创建群\n");
@@ -26,6 +29,13 @@ int print_group()
         P_UNLOCK;
         int chose;
         scanf("%d",&chose);
+        if(getchar()!='\n'){
+            P_LOCK;
+            printf("\t\t\t\t\t请勿非法输入!\n");
+            P_UNLOCK;
+            while((getchar())!='\n');
+            continue;
+        }
         switch(chose){
             case 1:
             grouplist();
@@ -65,6 +75,12 @@ int print_group()
             break;
             case 0:
             return 0;
+            break;
+            default:
+            P_LOCK;
+            printf("\t\t\t\t\t请勿非法输入!\n");
+            P_UNLOCK;
+            while((getchar())!='\n');
             break;
         }
     }

@@ -14,14 +14,14 @@ int gsetstate()
     char gid[10];
     memset(gid,0,sizeof(gid));
     //S_LOCK;
-    scanf("%s",gid);
+    Scanf(gid);
     P_LOCK;
     printf("请输入需要设置的成员ID\n");
     P_UNLOCK;
     char mid[10];
     memset(mid,0,sizeof(mid));
     //S_LOCK;
-    scanf("%s",mid);
+    Scanf(mid);
     //S_UNLOCK;
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));

@@ -14,7 +14,7 @@ int exitgroup()
     char gid[10];
     memset(gid,0,sizeof(gid));
     //S_LOCK;
-    scanf("%s",gid);
+    Scanf(gid);
     //S_UNLOCK;
     char send_buf[1024];
     memset(send_buf,0,sizeof(send_buf));

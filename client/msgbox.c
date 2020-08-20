@@ -54,7 +54,7 @@ void *msgbox(void *arg)
             }
             if(flag[0]=='0'){
                 P_LOCK;
-                printf("\t\t\t\t\t好友不存在\n");
+                printf("\t\t\t\t\t用户不存在\n");
                 P_UNLOCK;
             }
             else if(flag[0]=='2'){
@@ -151,7 +151,7 @@ void *msgbox(void *arg)
             }
             if(fid[0]=='0'){
                 P_LOCK;
-                printf("此用户不存在\n");
+                printf("\t\t\t\t\t此用户不存在\n");
                 P_UNLOCK;
                 break;
             }
@@ -272,7 +272,7 @@ void *msgbox(void *arg)
             }
             if(chat_flag==1 && strcmp(send_id,chat_id)==0){
                 P_LOCK;
-                printf("\t\t\t%s--->%s:%s\n",send_id,recv_id,msg);
+                printf("\t\t\t\t\t%s--->%s:%s\n",send_id,recv_id,msg);
                 P_UNLOCK;
             }
             else{

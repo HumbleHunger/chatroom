@@ -14,7 +14,6 @@ void my_err(const char *str,int line)
 }
 int main(int argc,char **argv)
 {
-    //Msg=(Msghead *)malloc(sizeof(Msghead));
     memset(&Msg,0,sizeof(Msghead));
     Msg.head=NULL;
     Msg.tail=NULL;
